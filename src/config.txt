@@ -1,0 +1,13 @@
+/*
+copy and paste this code into a file called config.js in the same spot this file is.
+Then replace the credentials there with your own!
+*/
+
+
+
+module.exports ={
+	consumerKey: "YOUR_CONSUMER_KEY_HERE",
+	consumerSecret: "YOUR_CONSUMER_SECRET_HERE",
+	accessToken: "YOUR_ACCESS_TOKEN_HERE",
+	accessTokenSecret: "YOUR_SECRET_TOKEN_HERE"
+};
