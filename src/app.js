@@ -10,6 +10,10 @@ const Twitter = require('twitter');
 
 app.use('/static', express.static(__dirname+'/public'));
 
+app.set('view engine', 'jade');
+app.set('views', __dirname+'/view');
+
+//Initializing twitter npm package, using secret keys from ./config.js
 var client = new Twitter({
 	consumer_key: secrets.consumerKey,
 	consumer_secret: secrets.consumerSecret,
@@ -53,7 +57,9 @@ app.get('/', function(req,res){
 				
 			}
 			var sentJSON = JSON.stringify(array);
-			res.send(sentJSON);
+			//res.send(sentJSON);
+			
+			res.render('index');
 			/*
 			 Going to need.
 			 tweets.text //the text

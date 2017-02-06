@@ -1,0 +1,41 @@
+extends ./layout.jade
+
+block content
+    .bounds.app--body
+        .app--section--header
+            .grid-33
+                .app--section--heading
+                    h2 TimeLine
+            .grid-33
+                .app--section--heading
+                    strong Amount Following Goes Here
+                    h2 Following
+            .grid-33
+                .app--section--heading
+                    h2 Direct Messages
+        .grid-33
+            .app--section
+                ul.app--tweet--list
+                    li
+                        strong.app--tweet--timestamp 4h
+                        a.app--tweet--author
+                            .app--avatar(style="background-image: url(/static/images/f-spore.png)")
+                                img(src="/static/images/f-spore.png")
+                            h4 Jill Spore
+                            | @jillspore
+                        p The timeLine text goes here
+                        ul.app--tweet--actions.circle--list--inline
+                            li
+                                a.app--reply
+                                    span.tooltip Reply
+                                    include ./../public/images/reply.svg
+                            li
+                                a.app--retweet
+                                    span.tooltip Retweet
+                                    include ./../public/images/retweet.svg
+                                    strong 75
+                            li
+                                a.app--like
+                                    span.tooltip Like
+                                    include ./../public/images/heart.svg
+                                    strong 12
