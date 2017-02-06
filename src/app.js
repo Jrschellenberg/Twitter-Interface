@@ -36,30 +36,30 @@ app.get('/', function(req,res){
 			for(var i=0; i<tweets.length; i++) {
 				
 				
-				var object = {};
+				var object = {},
+				d = new Date(tweets[i].created_at);
+				
 				object.text = tweets[i].text;
 				object.userName = tweets[i].user.name;
 				object.screenName = tweets[i].user.screen_name;
 				object.profileImageURL = tweets[i].user.profile_image_url;
-				object.createdAt = tweets[i].created_at;
+				object.createdAt = timeSince(d);
 				object.favoriteCount = tweets[i].favorite_count;
 				object.retweetCount = tweets[i].retweet_count;
 				
+				
+				
 				array.push(object);
 				
-				//console.log(tweets[i].text);
-				//console.log(tweets[i].user.name);
-				//console.log(tweets[i].user.screen_name);
-				//console.log(tweets[i].user.profile_image_url);
-				//console.log(tweets[i].created_at);
-				//console.log(tweets[i].favorite_count);
-				//console.log(tweets[i].retweet_count);
+
 				
 			}
-			var sentJSON = JSON.stringify(array);
-			//res.send(sentJSON);
+
+			//res.send(tweets[0]);
 			
-			res.render('index');
+			res.render('index', {timeLinePosts: array});
+		
+			
 			/*
 			 Going to need.
 			 tweets.text //the text
@@ -115,3 +115,33 @@ app.get('/friend', function(req, res){
 app.listen(3000, function(){
 	console.log("Front end listening on port 3000!");
 });
+
+
+
+function timeSince(date) {
+	
+	var seconds = Math.floor((new Date() - date) / 1000);
+	
+	var interval = Math.floor(seconds / 31536000);
+	
+	if (interval > 1) {
+		return interval + "yr";
+	}
+	interval = Math.floor(seconds / 2592000);
+	if (interval > 1) {
+		return interval + "mon";
+	}
+	interval = Math.floor(seconds / 86400);
+	if (interval > 1) {
+		return interval + "d";
+	}
+	interval = Math.floor(seconds / 3600);
+	if (interval > 1) {
+		return interval + "hr";
+	}
+	interval = Math.floor(seconds / 60);
+	if (interval > 1) {
+		return interval + "min";
+	}
+	return Math.floor(seconds) + "sec";
+}
