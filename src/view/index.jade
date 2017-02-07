@@ -57,3 +57,22 @@ block content
                                         a.button.button-text Unfollow
                                     else
                                         a.button Follow
+        .grid-33
+            .app--section
+                ul.app--message--list
+                    each item in directMessages
+                        li
+                            ul.app--message--conversation
+                                if item.me
+                                    li.app--message--me
+                                        .app--avatar(style="background-image: url(#{item.profileImageURL})")
+                                            img(src="#{item.profileImageURL}")
+                                        p.app--message--text #{item.text}
+                                        p.app--message--timestamp #{item.time} ago
+                                else
+                                    li.app--message
+                                        .app--avatar(style="background-image: url(#{item.profileImageURL})")
+                                            img(src="#{item.profileImageURL}")
+                                        p.app--message--text #{item.text}
+                                        p.app--message--timestamp #{item.time} ago
+                            
