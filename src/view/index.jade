@@ -8,7 +8,7 @@ block content
                     h2 TimeLine
             .grid-33
                 .app--section--heading
-                    strong Amount Following Goes Here
+                    strong #{friendCount}
                     h2 Following
             .grid-33
                 .app--section--heading
@@ -40,3 +40,20 @@ block content
                                         span.tooltip Like
                                         include ./../public/images/heart.svg
                                         strong  #{item.favoriteCount}
+        .grid-33
+            .app--section
+                ul.app--user--list
+                    each item in friendsList
+                        li
+                            .circle--fluid
+                                .circle--fluid--cell.circle--fluid--primary
+                                    a.app--tweet--author
+                                        .app--avatar(style="background-image: url(#{item.profileImageURL})")
+                                            img(src="#{item.profileImageURL}")
+                                        h4 #{item.userName}
+                                        p @#{item.screenName}
+                                .circle--fluid--cell
+                                    if item.following
+                                        a.button.button-text Unfollow
+                                    else
+                                        a.button Follow

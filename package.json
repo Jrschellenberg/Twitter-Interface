@@ -9,6 +9,7 @@
   "author": "Justin Schellenberg",
   "license": "MIT",
   "dependencies": {
+    "async": "^2.1.4",
     "express": "^4.14.1",
     "jade": "^1.11.0",
     "twitter": "^1.7.0"
