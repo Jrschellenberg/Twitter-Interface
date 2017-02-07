@@ -26,13 +26,13 @@ var count = 5;
 
 
 app.get('/', function(req,res){
+	var errorMessage = "";
 	async.parallel({
 		timeLine: function(callback) {
 			client.get('statuses/user_timeline',{count: count}, function(error, tweets, response){
-				//console.log("hit request");
-				//console.log(tweets.length);
+				var timeLineArray = [];
 				if(!error && response.statusCode === 200) {
-					var timeLineArray = [];
+					
 					
 					for(var i=0; i<tweets.length; i++) {
 						var object = {};
@@ -50,19 +50,18 @@ app.get('/', function(req,res){
 					//res.send(tweets[0]);
 					
 					//console.log(timeLineArray);
-					callback(null, timeLineArray);
+					
 				}//end if
-				else{
-					console.log("hitting else?");
-					//Render an error here
-				}//end else
+				callback(error, timeLineArray);
 			});//end client call
 			
 		},
 		friends: function(callback) {
 			client.get('friends/list', {count: count}, function(error, tweets, response){
+				var friendsListArray = [];
+
 				if(!error && response.statusCode === 200) {
-					var friendsListArray = [];
+					
 					for (var i = 0; i < tweets.users.length; i++) {
 						var object = {};
 						object.userName = tweets.users[i].name;
@@ -73,13 +72,9 @@ app.get('/', function(req,res){
 						friendsListArray.push(object);
 					} // end for
 					//res.send(tweets.users);
-					callback(null, friendsListArray);
+					
 				}//end if
-				else{
-					console.log("Hitting an error here");
-					console.log(error);
-					console.log(response);
-				}//end else
+				callback(error, friendsListArray);
 			});//end client call
 		},
 		directMessages: function(callback){
@@ -106,9 +101,9 @@ app.get('/', function(req,res){
 							else{
 								object.me = false;
 							}
-							
 							directMessageArray.push(object);
 						} // end for
+						
 						//If the array is populated with the count amount *2 (for the 2 calls)
 						//Then this code executes
 						if(directMessageArray.length == (count*2)){
@@ -117,58 +112,60 @@ app.get('/', function(req,res){
 								return new Date(a.createdAt) - new Date(b.createdAt);
 							});
 							//Slice the array and keep only the amount up to count we want.
-							callback(null, directMessageArray.slice(count, directMessageArray.length));
-						}
-						else{
-							console.log("Had issues grabbing Direct Messages");
-						}
+							callback(error, directMessageArray.slice(count, directMessageArray.length));
+						} // end if
 					} //end if
-					else{
-						console.log("An error occured while requesting direct Messages");
-					}//end else
+					
+					//need to put callback here ????????
+					
 				});
 			}//end getDirectMessages Function.
 		}
 	}, function(err, results) {
+		console.log(err);
+		console.log(results.timeLine);
 		if(!err){
-			console.log("Got into End of calls!");
-			console.log(results.directMessages);
 			//console.log(results.timeLine[0].friendCount);
 			res.render('index', {timeLinePosts: results.timeLine, directMessages: results.directMessages,
 				friendsList: results.friends, friendCount: results.timeLine[0].friendCount});
-		}
-	});	
-});
-
-app.get('/recent', function(req, res){
-	client.get('direct_messages', {count: count}, function(error, tweets, response){
-		if(!error && response.statusCode === 200) {
-			res.send(tweets);
-			var directMessageArray = [];
-			for (var i = 0; i < tweets.length; i++) {
-				var object = {};
-				object.text = tweets[i].text;
-				object.userName = tweets[i].sender.name;
-				object.screenName = tweets[i].sender.screen_name;
-				object.profileImageURL = tweets[i].sender.profile_image_url;
-				object.createdAt = tweets[i].created_at;
-				directMessageArray.push(object);
-			} // end for
 		} //end if
 		else{
-			console.log("An error occured while requesting direct Messages");
-		}//end else
-	});
-});
+			displayError(res, "There was an issue in handling your request.\n"+ err);
+		} //end else
+	});	// end function
 
-app.get('/myrecent', function(req, res){
-	client.get('direct_messages/sent',{count: count}, function(error, tweets, response){
-		res.send(tweets);
-		//res.send(response);
-		console.log(error);
-		//console.log(response);
-	});
-});
+	
+}); // end async
+//
+//app.get('/recent', function(req, res){
+//	client.get('direct_messages', {count: count}, function(error, tweets, response){
+//		if(!error && response.statusCode === 200) {
+//			res.send(tweets);
+//			var directMessageArray = [];
+//			for (var i = 0; i < tweets.length; i++) {
+//				var object = {};
+//				object.text = tweets[i].text;
+//				object.userName = tweets[i].sender.name;
+//				object.screenName = tweets[i].sender.screen_name;
+//				object.profileImageURL = tweets[i].sender.profile_image_url;
+//				object.createdAt = tweets[i].created_at;
+//				directMessageArray.push(object);
+//			} // end for
+//		} //end if
+//		else{
+//			errorMessage("An error occured while requesting direct Messages");
+//		}//end else
+//	});
+//});
+//
+//app.get('/myrecent', function(req, res){
+//	client.get('direct_messages/sent',{count: count, since_id: '827662798922641400'}, function(error, tweets, response){
+//		res.send(tweets);
+//		//res.send(response);
+//		console.log(error);
+//		//console.log(response);
+//	});
+//});
 
 
 app.listen(3000, function(){
@@ -198,5 +195,9 @@ function timeSince(date) {
 		return interval + "min";
 	}
 	return Math.floor(seconds) + "sec";
+}
+
+function displayError(res, error){
+	res.render('error', {error: error});
 }
 
