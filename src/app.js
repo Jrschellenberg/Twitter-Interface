@@ -3,15 +3,15 @@
  */
 'use strict';
 
-const express = require('express');
-const app = express();
-const async = require('async');
-const secrets = require('./config.js');
-const Twitter = require('twitter');
-const count = 5;
+//Requiring packages and setting constants.
+const express = require('express'),
+	 app = express(),
+	 async = require('async'),
+	 secrets = require('./config.js'),
+	 Twitter = require('twitter'),
+	 count = 5;
 
 app.use('/static', express.static(__dirname+'/public'));
-
 app.set('view engine', 'jade');
 app.set('views', __dirname+'/view');
 
@@ -23,9 +23,6 @@ var client = new Twitter({
 	access_token_secret: secrets.accessTokenSecret
 });
 
-
-
-
 app.get('/', function(req,res){
 	async.parallel({
 		timeLine: function(callback) {
@@ -34,8 +31,8 @@ app.get('/', function(req,res){
 				if(!error && response.statusCode === 200) {
 					
 					for(var i=0; i<tweets.length; i++) {
-						var object = {};
-						var d = new Date(tweets[i].created_at);
+						var object = {},
+						d = new Date(tweets[i].created_at);
 						object.text = tweets[i].text;
 						object.userName = tweets[i].user.name;
 						object.screenName = tweets[i].user.screen_name;
@@ -73,14 +70,14 @@ app.get('/', function(req,res){
 			getDirectMessages('direct_messages/sent');
 			/*
 			A function closure since these calls are very similar.
-			@param call: The string to be passed to client.get refering to which api call to make.
+			@param call: The string to be passed to client.get referring to which api call to make.
 			 */
 			function getDirectMessages(call){
 				client.get(call, {count: count}, function(error, tweets, response){
 					if(!error && response.statusCode === 200) {
 						for (var i = 0; i < tweets.length; i++) {
-							var object = {};
-							var d = new Date(tweets[i].created_at);
+							var object = {},
+							d = new Date(tweets[i].created_at);
 							object.text = tweets[i].text;
 							object.userName = tweets[i].sender.name;
 							object.screenName = tweets[i].sender.screen_name;
@@ -131,8 +128,8 @@ A function to parse date object into amount of second, minute, hour, days, month
 @param date: a Date object to compare against the current date.
  */
 function timeSince(date) {
-	var seconds = Math.floor((new Date() - date) / 1000);
-	var interval = Math.floor(seconds / 31536000);
+	var seconds = Math.floor((new Date() - date) / 1000),
+	interval = Math.floor(seconds / 31536000);
 	if (interval > 1) {
 		return interval + "yr";
 	}
