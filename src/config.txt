@@ -1,5 +1,5 @@
 /*
-copy and paste this code into a file called config.js in the same spot this file is.
+rename this file to be called config.js and keep this file in same location.
 Then replace the credentials there with your own!
 */
 
